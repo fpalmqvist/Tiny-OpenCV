@@ -13,3 +13,40 @@
 .externalNativeBuild
 .cxx
 /github.properties
+
+# Build directories at all levels
+**/build/
+**/out/
+
+# Android Studio
+*.iws
+.idea/
+
+# Gradle
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Native build outputs
+.externalNativeBuild/
+.cxx/
+obj/
+cmake-build-*/
+
+# Keystore files
+*.jks
+*.keystore
+
+# Generated files
+bin/
+gen/
+out/
+
+# APK/AAR/Bundle files (optional - uncomment if you don't want to track these)
+# *.apk
+# *.aar
+# *.ap_
+# *.aab
