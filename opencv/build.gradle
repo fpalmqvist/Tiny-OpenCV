@@ -3,8 +3,8 @@ apply plugin: 'com.android.library'
 
 group="com.zynkware"
 
-def openCVersionName = "4.4.1"
-def libraryVersionCode = 4
+def openCVersionName = "4.4.2"
+def libraryVersionCode = 5
 
 android {
     compileSdk 35

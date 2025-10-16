@@ -11,14 +11,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!-- NOTE: 16KB enforcement disabled because OpenCV libraries are pre-built
-             without 16KB alignment. To enable, rebuild OpenCV from source with
-             -Wl,-z,max-page-size=16384 linker flag -->
-        <!--
+        <!-- Enable 16KB page size support for Android 15+ -->
         <property
             android:name="android.app.enforce16KbPageSize"
             android:value="true" />
-        -->
 
         <activity
             android:name=".MainActivity"
