@@ -73,12 +73,14 @@ class MainActivity : AppCompatActivity() {
 
 **Total AAR**: 31.6 MB (**Tiny** build with only core + imgproc modules)
 
-| ABI           | libopencv_java4.so | libc++_shared.so | Total   |
-|---------------|-------------------|------------------|---------|
-| arm64-v8a     | 6.4 MB            | 1.8 MB           | 8.2 MB  |
-| armeabi-v7a   | 4.5 MB            | 1.3 MB           | 5.8 MB  |
-| x86           | 23 MB             | 1.6 MB           | 24.6 MB |
-| x86_64        | 38 MB             | 1.6 MB           | 39.6 MB |
+| ABI           | libopencv_java4.so |
+|---------------|--------------------|
+| arm64-v8a     | ~6.5 MB            |
+| armeabi-v7a   | ~4.6 MB            |
+| x86           | ~23 MB             |
+| x86_64        | ~38 MB             |
+
+*C++ runtime is statically linked (`c++_static`) -- no separate `libc++_shared.so` needed.*
 
 *All libraries built with 16KB page alignment (verified with `readelf`)*
 

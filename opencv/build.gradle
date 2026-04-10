@@ -20,9 +20,8 @@ android {
 
         externalNativeBuild {
             cmake {
-                arguments "-DANDROID_STL=c++_shared",
+                arguments "-DANDROID_STL=c++_static",
                           "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
-                targets "opencv_jni_shared"
             }
         }
     }
@@ -51,12 +50,6 @@ android {
         main.jniLibs.srcDirs = ['src/main/jniLibs']
         main.res.srcDirs = ['src/main/res']
         main.manifest.srcFile 'src/main/AndroidManifest.xml'
-    }
-
-    externalNativeBuild {
-        cmake {
-            path (project.projectDir.toString() + '/libcxx_helper/CMakeLists.txt')
-        }
     }
 
     compileOptions {

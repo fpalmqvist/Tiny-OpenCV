@@ -78,7 +78,7 @@ for ABI in "${ABIS[@]}"; do
     -DCMAKE_TOOLCHAIN_FILE="$ANDROID_NDK/build/cmake/android.toolchain.cmake" \
     -DANDROID_ABI="$ABI" \
     -DANDROID_PLATFORM=android-21 \
-    -DANDROID_STL=c++_shared \
+    -DANDROID_STL=c++_static \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_SHARED_LINKER_FLAGS="$LINKER_FLAGS" \
     -DCMAKE_EXE_LINKER_FLAGS="$LINKER_FLAGS" \
@@ -143,24 +143,6 @@ for ABI in "${ABIS[@]}"; do
   fi
   
   cp "$JAVA_LIB" "$DEST_DIR/"
-  
-  # Copy libc++_shared.so from NDK
-  NDK_LIBCXX="$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib"
-  
-  case $ABI in
-    arm64-v8a)
-      cp "$NDK_LIBCXX/aarch64-linux-android/libc++_shared.so" "$DEST_DIR/"
-      ;;
-    armeabi-v7a)
-      cp "$NDK_LIBCXX/arm-linux-androideabi/libc++_shared.so" "$DEST_DIR/"
-      ;;
-    x86)
-      cp "$NDK_LIBCXX/i686-linux-android/libc++_shared.so" "$DEST_DIR/"
-      ;;
-    x86_64)
-      cp "$NDK_LIBCXX/x86_64-linux-android/libc++_shared.so" "$DEST_DIR/"
-      ;;
-  esac
   
   echo "✓ Copied $ABI"
 done

@@ -12,12 +12,14 @@
 
 ### Library Sizes
 
-| Architecture | libopencv_java4.so | libc++_shared.so | Total   |
-|--------------|-------------------|------------------|---------|
-| **arm64-v8a** | 6.4 MB           | 1.8 MB           | 8.2 MB  |
-| **armeabi-v7a** | 4.5 MB         | 1.3 MB           | 5.8 MB  |
-| **x86**       | 23 MB            | 1.6 MB           | 24.6 MB |
-| **x86_64**    | 38 MB            | 1.6 MB           | 39.6 MB |
+| Architecture | libopencv_java4.so |
+|--------------|--------------------|
+| **arm64-v8a** | ~6.5 MB           |
+| **armeabi-v7a** | ~4.6 MB         |
+| **x86**       | ~23 MB            |
+| **x86_64**    | ~38 MB            |
+
+*C++ runtime is statically linked -- no separate `libc++_shared.so` needed.*
 
 **Total AAR**: 31.6 MB
 
@@ -73,7 +75,7 @@ All architectures verified with `readelf -l`:
 -DBUILD_FAT_JAVA_LIB=ON                # Build shared Java library
 -DBUILD_opencv_java=ON                 # Enable Java bindings
 -DCMAKE_SHARED_LINKER_FLAGS="-Wl,-z,max-page-size=16384"  # 16KB alignment
--DANDROID_STL=c++_shared               # Use shared C++ library
+-DANDROID_STL=c++_static               # Statically link C++ runtime
 -DBUILD_opencv_calib3d=OFF             # Disable extra modules
 -DBUILD_opencv_dnn=OFF
 -DBUILD_opencv_features2d=OFF
@@ -82,24 +84,13 @@ All architectures verified with `readelf -l`:
 
 ---
 
-## ✨ Why `libc++_shared.so` is Included
+## ✨ Why Static C++ Linking (`c++_static`)
 
-**Q**: Why are there now `libc++_shared.so` files?
+The build uses `c++_static` to embed all required C++ runtime symbols directly into `libopencv_java4.so`. This eliminates the separate `libc++_shared.so` dependency, preventing `UnsatisfiedLinkError` crashes that can occur on a subset of devices when the shared C++ runtime cannot be resolved at load time.
 
-**A**: The new build uses `c++_shared` instead of `c++_static`:
-
-### Previous Build (c++_static)
-- C++ standard library embedded in `libopencv_java4.so`
-- Self-contained, no external dependencies
-- Smaller individual `.so` file
-
-### New Build (c++_shared)
-- C++ standard library as separate `libc++_shared.so` file
-- Required by `libopencv_java4.so` at runtime
-- **Google's recommended approach** for NDK r18+
-- More flexible, allows library sharing across modules
-
-Both approaches have similar total sizes, but `c++_shared` is the modern standard and works perfectly with 16KB alignment.
+- Self-contained: no external `libc++_shared.so` needed
+- Eliminates a class of native library load failures
+- The linker only pulls in used symbols, so size impact is minimal
 
 ---
 
@@ -187,17 +178,13 @@ opencv/build/outputs/aar/opencv-release.aar
 ```
 opencv/src/main/jniLibs/
 ├── arm64-v8a/
-│   ├── libopencv_java4.so (6.4 MB)
-│   └── libc++_shared.so (1.8 MB)
+│   └── libopencv_java4.so
 ├── armeabi-v7a/
-│   ├── libopencv_java4.so (4.5 MB)
-│   └── libc++_shared.so (1.3 MB)
+│   └── libopencv_java4.so
 ├── x86/
-│   ├── libopencv_java4.so (23 MB)
-│   └── libc++_shared.so (1.6 MB)
+│   └── libopencv_java4.so
 └── x86_64/
-    ├── libopencv_java4.so (38 MB)
-    └── libc++_shared.so (1.6 MB)
+    └── libopencv_java4.so
 ```
 
 ---
@@ -219,7 +206,7 @@ opencv/src/main/jniLibs/
 
 2. **x86/x86_64 are larger**: This is expected and acceptable as these ABIs are rarely used on real devices (mostly emulators).
 
-3. **libc++_shared.so is necessary**: Don't remove these files - they're required dependencies for the OpenCV library.
+3. **Static C++ linking**: The C++ runtime is statically linked into `libopencv_java4.so`, so no separate `libc++_shared.so` is needed.
 
 4. **Build script is reusable**: Use `build_opencv_tiny_16kb.sh` for future builds. It auto-downloads OpenCV source and NDK if needed.
 

@@ -20,7 +20,6 @@ android {
                 abiFilters "x86", "x86_64", "armeabi-v7a", "arm64-v8a"
                 arguments "-DOpenCV_DIR=" + projectDir + "/../opencv/src/main/jniLibs",
                           "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
-                targets "opencv_jni_shared"
             }
         }
     }
@@ -41,12 +40,6 @@ android {
 
     androidResources {
         noCompress 'so'
-    }
-
-    externalNativeBuild {
-        cmake {
-            path (project.projectDir.toString() + '/libcxx_helper/CMakeLists.txt')
-        }
     }
 
     compileOptions {
